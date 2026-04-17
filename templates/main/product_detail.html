@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} - Мастер пол{% endblock %}
+
+{% block content %}
+<div class="page-title">
+    <h1>{{ product.name }}</h1>
+</div>
+
+<div class="card">
+    <div class="card-header">Информация о продукции</div>
+    <p><strong>Артикул:</strong> {{ product.article }}</p>
+    <p><strong>Тип:</strong> {{ product.product_type.name }}</p>
+    <p><strong>Минимальная стоимость:</strong> {{ product.min_price }} руб.</p>
+    {% if product.description %}
+        <p><strong>Описание:</strong> {{ product.description }}</p>
+    {% endif %}
+    {% if product.length %}
+        <p><strong>Размеры упаковки:</strong> {{ product.length }} x {{ product.width }} x {{ product.height }} мм</p>
+    {% endif %}
+    {% if product.weight_without_pack %}
+        <p><strong>Вес без упаковки:</strong> {{ product.weight_without_pack }} кг</p>
+    {% endif %}
+    {% if product.weight_with_pack %}
+        <p><strong>Вес с упаковкой:</strong> {{ product.weight_with_pack }} кг</p>
+    {% endif %}
+    {% if product.production_time %}
+        <p><strong>Время изготовления:</strong> {{ product.production_time }} мин</p>
+    {% endif %}
+</div>
+
+{% if product.image %}
+<div class="card">
+    <div class="card-header">Изображение</div>
+    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 300px;">
+</div>
+{% endif %}
+
+<a href="{% url 'product_list' %}" class="btn">Назад к списку</a>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if action == 'add' %}Добавление{% else %}Редактирование{% endif %} партнера - Мастер пол{% endblock %}
+
+{% block content %}
+<div class="page-title">
+    <h1>{% if action == 'add' %}Добавление нового партнера{% else %}Редактирование партнера{% endif %}</h1>
+</div>
+
+<div class="card">
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="partner_type">Тип партнера</label>
+            <select name="partner_type" id="partner_type" class="form-control" required>
+                {% for pt in partner_types %}
+                    <option value="{{ pt.pk }}" {% if partner and partner.partner_type_id == pt.pk %}selected{% endif %}>{{ pt.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="name">Наименование</label>
+            <input type="text" name="name" id="name" class="form-control" value="{{ partner.name|default:'' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="director">Директор</label>
+            <input type="text" name="director" id="director" class="form-control" value="{{ partner.director|default:'' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" class="form-control" value="{{ partner.email|default:'' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="phone">Телефон</label>
+            <input type="text" name="phone" id="phone" class="form-control" value="{{ partner.phone|default:'' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="address">Юридический адрес</label>
+            <textarea name="address" id="address" class="form-control" rows="3" required>{{ partner.address|default:'' }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="inn">ИНН</label>
+            <input type="text" name="inn" id="inn" class="form-control" value="{{ partner.inn|default:'' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="rating">Рейтинг</label>
+            <input type="number" name="rating" id="rating" class="form-control" value="{{ partner.rating|default:'0' }}" min="0" max="10">
+        </div>
+        <button type="submit" class="btn">Сохранить</button>
+        <a href="{% url 'partner_list' %}" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
+{% endblock %}
