@@ -20,7 +20,12 @@
                     <li><a href="{% url 'product_list' %}">Продукция</a></li>
                     <li><a href="{% url 'sales_history' %}">История продаж</a></li>
                     {% if user.is_authenticated %}
-                        <li><a href="{% url 'logout' %}">Выйти ({{ user.username }})</a></li>
+                        <li>
+                            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" style="background: none; border: none; color: #333; font-family: inherit; font-size: inherit; cursor: pointer; padding: 10px 15px;">Выйти ({{ user.username }})</button>
+                            </form>
+                        </li>
                     {% else %}
                         <li><a href="{% url 'login' %}">Войти</a></li>
                     {% endif %}
