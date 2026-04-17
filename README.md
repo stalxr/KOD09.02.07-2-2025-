@@ -6,7 +6,7 @@ Django-приложение для управления партнерами, п
 
 - Python 3.10+
 - PostgreSQL 12+
-- pgAdmin 4 (для управления БД)
+- pgAdmin 4 (опционально)
 
 ## Установка и настройка
 
@@ -31,52 +31,49 @@ source venv/bin/activate  # Linux/Mac
 pip install -r requirements.txt
 ```
 
-### 4. Настройка PostgreSQL в pgAdmin 4
+### 4. Настройка PostgreSQL
 
-1. Откройте pgAdmin 4
-2. Подключитесь к серверу PostgreSQL
-3. Создайте базу данных `master_pol`:
-   - Правой кнопкой на "Databases" → Create → Database
-   - Имя базы: `master_pol`
-   - Owner: `postgres`
-   - Нажмите Save
-
-### 5. Применение миграций
-
+**Вариант А - Восстановление из бэкапа:**
 ```bash
-python manage.py migrate
+# В pgAdmin 4 или psql:
+# 1. Создайте базу master_pol
+# 2. Восстановите из файла:
+psql -U postgres -d master_pol -f db_er_backup/postgrebackup_db.sql
 ```
 
-### 6. Импорт данных из Excel
+**Вариант Б - Новая база с нуля:**
+1. Создайте базу `master_pol` в PostgreSQL
+2. Выполните миграции: `python manage.py migrate`
+3. Импортируйте данные: `python manage.py import_excel`
 
-```bash
-python manage.py import_excel
-```
+Настройки подключения в `master_pol/settings.py`:
+- База: `master_pol`
+- Пользователь: `postgres`
+- Пароль: `postgres`
+- Хост: `localhost`
+- Порт: `5432`
 
-### 7. Создание суперпользователя
-
-```bash
-python manage.py createsuperuser
-```
-
-Введите:
-- Username: admin
-- Email: (можно оставить пустым)
-- Password: (ваш пароль)
-
-### 8. Запуск сервера
+### 5. Запуск сервера
 
 ```bash
 python manage.py runserver
 ```
 
-Откройте в браузере: http://127.0.0.1:8000/
+Откройте: http://127.0.0.1:8000/
+
+## Доступ к админке
+
+http://127.0.0.1:8000/admin/
+
+Дефолтные пользователи (создаются автоматически):
+- **admin** / admin123 (суперпользователь)
+- **manager** / manager123
 
 ## Функционал
 
-- **Партнеры**: список партнеров с расчетом скидок на основе объема продаж
-- **Продукция**: каталог продукции компании
-- **История продаж**: история реализации продукции партнерам
+- **Партнеры**: список партнеров с расчетом скидок
+- **Продукция**: каталог продукции
+- **История продаж**: история реализации продукции
 - **Авторизация**: вход/выход для управления данными
 
 ## Структура проекта
@@ -92,21 +89,21 @@ KOD_PROJECT/
 ├── master_pol/            # Настройки проекта
 ├── templates/             # HTML шаблоны
 ├── static/                # CSS, изображения
+├── db_er_backup/          # ER-диаграмма и бэкап БД
+│   ├── er-diagramm        # ER-диаграмма базы данных
+│   └── postgrebackup_db.sql  # SQL бэкап базы
 ├── manage.py              # Управление проектом
 └── requirements.txt       # Зависимости
 ```
 
+## Документация БД
+
+- **ER-диаграмма**: `db_er_backup/er-diagramm`
+- **SQL бэкап**: `db_er_backup/postgrebackup_db.sql`
+
 ## Стилизация
 
 - Шрифт: Segoe UI
-- Основной фон: #FFFFFF (белый)
-- Дополнительный фон: #F4E8D3 (бежевый)
-- Акцентный цвет: #67BA80 (зеленый)
-- Логотип: Мастер пол (из ресурсов)
-
-## Доступ к админке
-
-http://127.0.0.1:8000/admin/
-
-Логин: admin
-Пароль: (тот что создали при createsuperuser)
+- Основной фон: #FFFFFF
+- Дополнительный фон: #F4E8D3
+- Акцентный цвет: #67BA80
